@@ -60,4 +60,10 @@ router.post('/books/:id/delete', (req, res, next) => {
     res.redirect('/books')
   })
 });
+
+/* post book id search*/
+router.post('/books/:id/search', (req, res, next) => {
+  
+});
+
 module.exports = router;

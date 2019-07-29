@@ -4,6 +4,12 @@ block content
   h1 Books
     p
       a.button(href='/books/new') Create New Book
+    form()
+      div
+          label(for='search') Search
+          input#search(name='search', type='text')
+      div
+          input(type='submit')
     table
       thead
         tr
