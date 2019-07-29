@@ -28,6 +28,17 @@ router.post('/books/new', (req, res, next) => {
     year: req.body.year
   }).then(() => {
     res.redirect('/books')
+  }).catch((err) => {
+    if(err.name === 'SequelizeValidationError'){
+      res.render('new-book', {
+        book: Book.build,
+        errors: err.errors
+      })
+    } else {
+      throw err;
+    }
+  }).catch((err) => {
+    res.send(500)
   })
 });
 
@@ -51,6 +62,19 @@ router.post('/books/:id', (req, res, next) => {
     where: {id: req.params.id}
   }).then(() => {
     res.redirect('/books')
+  }).catch((err) => {
+    if(err.name === 'SequelizeValidationError'){
+      const book = Book.build(req.body);
+      book.id = req.params.id;
+      res.render('new-book', {
+        book: book,
+        errors: err.errors
+      })
+    } else {
+      throw err;
+    }
+  }).catch((err) => {
+    res.send(500)
   })
 });
 

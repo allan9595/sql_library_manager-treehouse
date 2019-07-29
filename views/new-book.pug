@@ -2,6 +2,12 @@ extends layout
 
 block content
   h1 New Book
+    if errors
+      h2.error Oooops!
+        ul.error
+          li Author is required
+          li Name is required
+
     form(action='/books/new',method='post')
       div
         label(for='title') Title
