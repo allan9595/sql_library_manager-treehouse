@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 /* GET home page. */
 router.get('/', (req, res, next) => {
   res.redirect('/books')
@@ -9,7 +11,7 @@ router.get('/', (req, res, next) => {
 /* GET book page. */
 router.get('/books', (req, res, next) => {
   Book.findAll({order: [["createdAt", "DESC"]]}).then((books) => {
-    res.render('index', { books, title:'Books' });
+    res.render('index', { books, title:'Books'});
   })
   
 });
@@ -86,8 +88,32 @@ router.post('/books/:id/delete', (req, res, next) => {
 });
 
 /* post book id search*/
-router.post('/books/:id/search', (req, res, next) => {
-  
+//inspried by this video @Traversy Media
+
+/*https://www.youtube.com/watch?v=6jbrWF3BWM0*/
+
+router.get('/search', (req, res, next) => {
+  const term = req.query.term;
+  Book.findAll({
+    where: {
+      [Op.or]:[
+        {title: {
+          [Op.like] : '%' + term + '%'
+        }},
+        {author: {
+          [Op.like] : '%' + term + '%'
+        }},
+        {genre: {
+          [Op.like] : '%' + term + '%'
+        }},
+        {year: {
+          [Op.like] : '%' + term + '%'
+        }}
+      ]
+    }
+  }).then((books) => {
+    res.render('index', {books})
+  })
 });
 
 module.exports = router;
