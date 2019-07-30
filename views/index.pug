@@ -11,7 +11,7 @@ block content
       div
         input(type='submit')
     p
-      a.button(href='/books') Back To Home
+      a.button(href='/books/0') Back To Home
     table
       thead
         tr
@@ -27,4 +27,8 @@ block content
             td #{book.author}
             td #{book.genre}
             td #{book.year}
-        
+    if !search
+      p
+        a.button(href=`/books/` + pagePrevious) Previous
+      p
+        a.button(href=`/books/` + page) Next
