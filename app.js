@@ -26,9 +26,9 @@ app.use((req, res, next) => {
   next(createError(404));
 });
 
-// error handler
+// error handler works in dev and producation
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
+  
   res.locals.message = err.message;
   res.locals.error = err ;
 

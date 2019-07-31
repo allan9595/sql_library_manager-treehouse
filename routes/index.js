@@ -17,7 +17,6 @@ router.get('/books/page/:page', (req, res, next) => {
     res.redirect('/books/page/0') //if the page goes to negative value, redirect to first page
   }
   else{
-    console.log(req.params.page);
     if(count > req.params.page){
       count -=1; //correct page refresh error
     } 
@@ -27,11 +26,11 @@ router.get('/books/page/:page', (req, res, next) => {
     }
     Book.findAll({
       order: [["createdAt", "DESC"]],
-      limit: 5,
-      offset: req.params.page * 5
+      limit: 5, //limit to 5 items
+      offset: req.params.page * 5 //skip 5 more items each time 
     }).then((books) => {
       if(books.length ===0){
-        res.render('page-not-found');
+        res.render('page-not-found'); // if nothing returned or exceeding the page number, render no found and reset the count
         count = 0;
       }else {
         res.render('index', { 
@@ -57,7 +56,7 @@ router.get('/books/page/:page', (req, res, next) => {
 
   /* GET book new */
   router.get('/books/new', (req, res, next) => {
-    res.render('new-book', {book: Book.build()})
+    res.render('new-book', {book: Book.build()}) //passing a model instance to the form for later submission
   });
 
   /* POST book new */
@@ -70,6 +69,7 @@ router.get('/books/page/:page', (req, res, next) => {
     }).then(() => {
       res.redirect('/books/page/0')
     }).catch((err) => {
+      // error handling
       if(err.name === 'SequelizeValidationError'){
         res.render('new-book', {
           book: Book.build,
@@ -87,7 +87,7 @@ router.get('/books/page/:page', (req, res, next) => {
 /* GET book id */
 router.get('/books/:id', (req, res, next) => {
   Book.findByPk(req.params.id).then((book) => {
-    res.render('update-book',{book})
+    res.render('update-book',{book}) //rendering update the app
   })
 });
 
@@ -100,15 +100,15 @@ router.post('/books/:id', (req, res, next) => {
     genre: req.body.genre,
     year: req.body.year
   }, {
-    where: {id: req.params.id}
+    where: {id: req.params.id} //find the book
   }).then(() => {
     res.redirect('/books/page/0')
   }).catch((err) => {
     if(err.name === 'SequelizeValidationError'){
-      const book = Book.build(req.body);
-      book.id = req.params.id;
+      const book = Book.build(req.body); //get an instance of the modal
+      book.id = req.params.id; //get the correct id
       res.render('new-book', {
-        book: book,
+        book: book, //pass it to the new book to show in the form
         errors: err.errors
       })
     } else {
@@ -132,6 +132,7 @@ router.post('/books/:id/delete', (req, res, next) => {
 /*https://www.youtube.com/watch?v=6jbrWF3BWM0*/
 
 router.get('/search', (req, res, next) => {
+  //search the items
   const term = req.query.term;
   Book.findAll({
     order: [["createdAt", "DESC"]],
