@@ -11,6 +11,10 @@ router.get('/', (req, res, next) => {
   res.redirect('/books/page/0')
 });
 
+router.get('/books', (req, res, next) => {
+  res.redirect('/books/page/0')
+});
+
 /* GET book page. */
 router.get('/books/page/:page', (req, res, next) => {
   if(req.params.page == -1){
