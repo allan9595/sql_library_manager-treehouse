@@ -28,4 +28,4 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
     Copyright 2019 BOHAN ZHANG
 
 #### TODO Next
-- [] This APP currently used an local sqlite database in the repo. Needs to be updated to PostgreSQL on HeroKu.
+- [ ] This APP currently used an local sqlite database in the repo. Needs to be updated to PostgreSQL on HeroKu.
