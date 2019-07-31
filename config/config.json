@@ -12,6 +12,7 @@
   "production": {
     "storage": "library.db",
     "dialect": "sqlite",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "use_env_variable": "postgresql-rectangular-56918"
   }
 }

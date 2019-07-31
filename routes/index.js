@@ -8,14 +8,14 @@ let count = 0;
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
-  res.redirect('/books/0')
+  res.redirect('/books/page/0')
 });
 
 /* GET book page. */
-router.get('/books/:page', (req, res, next) => {
+router.get('/books/page/:page', (req, res, next) => {
   console.log(req.params.page)
   if(req.params.page == -1){
-    res.redirect('/books/0')
+    res.redirect('/books/page/0')
   }else{
   if(count > req.params.page){
     count -=1; //correct page refresh error
