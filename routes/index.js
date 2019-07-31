@@ -15,64 +15,72 @@ router.get('/', (req, res, next) => {
 router.get('/books/page/:page', (req, res, next) => {
   if(req.params.page == -1){
     res.redirect('/books/page/0') //if the page goes to negative value, redirect to first page
-  }else{
-  if(count > req.params.page){
-    count -=1; //correct page refresh error
-  } 
-
-  if(count < req.params.page){
-    count +=1 //correct page refresh error
   }
-  Book.findAll({
-    order: [["createdAt", "DESC"]],
-    limit: 5,
-    offset: req.params.page * 5
-  }).then((books) => {
-    if(books.length ===0){
-      res.render('page-not-found')
-    }else {
-      res.render('index', { 
-        page: page+count, 
-        pagePrevious: ((page+count)-2),
-        books, 
-        title:'Books'
-      });
-    }
-  })
-  
-    count += 1; //every time after the render, increase the count by 1 
-    if((count - req.params.page) === 2){
-      count -= 1; //coreect the page counting issue 
-    }
-  }
-});
+  else{
+    console.log(req.params.page);
+    if(count > req.params.page){
+      count -=1; //correct page refresh error
+    } 
 
-/* GET book new */
-router.get('/books/new', (req, res, next) => {
-  res.render('new-book', {book: Book.build()})
-});
-
-/* POST book new */
-router.post('/books/new', (req, res, next) => {
-  Book.create({
-    title: req.body.title, 
-    author: req.body.author,
-    genre: req.body.genre,
-    year: req.body.year
-  }).then(() => {
-    res.redirect('/books/page/0')
-  }).catch((err) => {
-    if(err.name === 'SequelizeValidationError'){
-      res.render('new-book', {
-        book: Book.build,
-        errors: err.errors
-      })
-    } else {
-      throw err;
+    if(count < req.params.page){
+      count +=1 //correct page refresh error
     }
-  }).catch((err) => {
-    res.send(500)
-  })
+    Book.findAll({
+      order: [["createdAt", "DESC"]],
+      limit: 5,
+      offset: req.params.page * 5
+    }).then((books) => {
+      if(books.length ===0){
+        res.render('page-not-found');
+        count = 0;
+      }else {
+        res.render('index', { 
+          page: page+count, 
+          pagePrevious: ((page+count)-2),
+          books, 
+          title:'Books'
+        });
+      }
+    }).catch((err) => {
+      if(err.name ==='SequelizeDatabaseError'){
+        res.render('page-not-found');
+        count = 0;
+      }
+    })
+    
+      count += 1; //every time after the render, increase the count by 1 
+      if((count - req.params.page) === 2){
+        count -= 1; //coreect the page counting issue 
+      }
+    }
+  });
+
+  /* GET book new */
+  router.get('/books/new', (req, res, next) => {
+    res.render('new-book', {book: Book.build()})
+  });
+
+  /* POST book new */
+  router.post('/books/new', (req, res, next) => {
+    Book.create({
+      title: req.body.title, 
+      author: req.body.author,
+      genre: req.body.genre,
+      year: req.body.year
+    }).then(() => {
+      res.redirect('/books/page/0')
+    }).catch((err) => {
+      if(err.name === 'SequelizeValidationError'){
+        res.render('new-book', {
+          book: Book.build,
+          errors: err.errors
+        })
+      } else {
+        throw err;
+      }
+    }).catch((err) => {
+      res.send(500)
+    })
 });
 
 
