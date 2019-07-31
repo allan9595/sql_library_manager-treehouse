@@ -9,10 +9,12 @@ You can visit the live version at [SQL Library Manager](https://sql-library-mang
 ## How to run on the local machine
 
 git clone https://github.com/allan9595/sql_library_manager-treehouse.git
+
 npm install 
+
 npm run start
 
-go to the localhost:3000
+Go to the localhost:3000
 
 ## Video Walkthrough
 
