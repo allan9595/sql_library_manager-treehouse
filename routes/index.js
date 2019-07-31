@@ -13,9 +13,8 @@ router.get('/', (req, res, next) => {
 
 /* GET book page. */
 router.get('/books/page/:page', (req, res, next) => {
-  console.log(req.params.page)
   if(req.params.page == -1){
-    res.redirect('/books/page/0')
+    res.redirect('/books/page/0') //if the page goes to negative value, redirect to first page
   }else{
   if(count > req.params.page){
     count -=1; //correct page refresh error
@@ -38,13 +37,10 @@ router.get('/books/page/:page', (req, res, next) => {
         books, 
         title:'Books'
       });
-      console.log(books)
     }
   })
-    console.log(req.params.page);
-    console.log(count);
-    count += 1;
-    console.log(count);
+  
+    count += 1; //every time after the render, increase the count by 1 
     if((count - req.params.page) === 2){
       count -= 1; //coreect the page counting issue 
     }
@@ -64,7 +60,7 @@ router.post('/books/new', (req, res, next) => {
     genre: req.body.genre,
     year: req.body.year
   }).then(() => {
-    res.redirect('/books')
+    res.redirect('/books/page/0')
   }).catch((err) => {
     if(err.name === 'SequelizeValidationError'){
       res.render('new-book', {
@@ -98,7 +94,7 @@ router.post('/books/:id', (req, res, next) => {
   }, {
     where: {id: req.params.id}
   }).then(() => {
-    res.redirect('/books')
+    res.redirect('/books/page/0')
   }).catch((err) => {
     if(err.name === 'SequelizeValidationError'){
       const book = Book.build(req.body);
@@ -118,7 +114,7 @@ router.post('/books/:id', (req, res, next) => {
 /* post book id delete*/
 router.post('/books/:id/delete', (req, res, next) => {
   Book.destroy({where: {id: req.params.id}}).then(() => {
-    res.redirect('/books')
+    res.redirect('/books/page/0')
   })
 });
 
